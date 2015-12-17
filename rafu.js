@@ -17,9 +17,9 @@ var frame = exports.frame = (function(win) {
     win.msRequestAnimationFrame;
   if (raf) return raf.bind(win);
   return function (callback) {
-    win.setTimeout(callback, 16);
+    setTimeout(callback, 16);
   };
-}(window));
+}(typeof window === 'undefined' ? {} : window));
 
 /**
  * rafu.throttle - returns a function, that, when invoked, will only be triggered
