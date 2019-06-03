@@ -102,7 +102,12 @@ describe('rafu', function() {
       });
     });
 
-    it('should not run when cancelFrame is called', function(done) {
+    it('should hanve cancel method attached', function() {
+      var handler = rafu.throttle(function() {});
+      expect(typeof handler.cancel).to.equal('function');
+    });
+
+    it('should not run when cancel is called', function(done) {
       var count = 0;
       var handler = rafu.throttle(function() {
         count++;
@@ -111,7 +116,7 @@ describe('rafu', function() {
       handler();
       handler();
       handler();
-      handler.cancelFrame();
+      handler.cancel();
   
       setTimeout(function(){
         expect(count).to.equal(0);

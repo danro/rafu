@@ -65,7 +65,7 @@ exports.throttle = function(func) {
     });
   };
 
-  throttled.cancelFrame = function() {
+  throttled.cancel = function() {
     cancelFrame(rafOrTimeoutId);
   };
 
