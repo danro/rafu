@@ -46,7 +46,7 @@ var cancelFrame = exports.cancelFrame = (function(win) {
  * rafu.throttle - returns a function, that, when invoked, will only be triggered
  * once every browser animation frame
  * @param {Function} func  Funciton to wrap
- * @return {Function} func with cancelFrame property added  
+ * @return {Function} throttled func with cancel property added  
  */
 exports.throttle = function(func) {
   var wait;
