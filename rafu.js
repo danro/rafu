@@ -8,6 +8,7 @@
 /**
  * rafu.frame - basic animation frame request method
  * @param {Function} callback
+ * @return {Number} requestAnimationFrame or setTimeout id for cancelling
  */
 var frame = exports.frame = (function(win) {
   var raf = win.requestAnimationFrame ||
@@ -15,9 +16,29 @@ var frame = exports.frame = (function(win) {
     win.mozRequestAnimationFrame ||
     win.oRequestAnimationFrame ||
     win.msRequestAnimationFrame;
-  if (raf) return raf.bind(win);
+  if (raf) {
+    return raf.bind(win);
+  }
   return function (callback) {
-    setTimeout(callback, 16);
+    return setTimeout(callback, 16);
+  };
+}(typeof window === 'undefined' ? {} : window));
+
+/**
+ * rafu.cancelFrame - cancels a frame via id returned by rafu.frame
+ * @param {Number} requestAnimationFrame or setTimeout id for cancelling
+ */
+var cancelFrame = exports.cancelFrame = (function(win) {
+  var cancelRaf = win.cancelAnimationFrame ||
+    win.webkitCancelAnimationFrame ||
+    win.mozCancelAnimationFrame ||
+    win.oCancelAnimationFrame ||
+    win.msCancelAnimationFrame;
+  if (cancelRaf) {
+    return cancelRaf.bind(win);
+  }
+  return function (timeoutId) {
+    return win.clearTimeout(timeoutId);
   };
 }(typeof window === 'undefined' ? {} : window));
 
@@ -25,21 +46,28 @@ var frame = exports.frame = (function(win) {
  * rafu.throttle - returns a function, that, when invoked, will only be triggered
  * once every browser animation frame
  * @param {Function} func  Funciton to wrap
- * @return {Funciton}
+ * @return {Function} func with cancelFrame property added  
  */
 exports.throttle = function(func) {
   var wait;
   var args;
   var context;
+  var rafOrTimeoutId;
 
-  return function() {
+  var throttled = function() {
     args = arguments;
     if (wait) return;
     wait = true;
     context = this;
-    frame(function() {
+    rafOrTimeoutId = frame(function() {
       wait = false;
       func.apply(context, args);
     });
   };
+
+  throttled.cancelFrame = function() {
+    cancelFrame(rafOrTimeoutId);
+  };
+
+  return throttled;
 };
