@@ -14,6 +14,10 @@ describe('rafu', function() {
     expect(rafu.frame).to.exist;
   });
 
+  it('should have cancel method', function() {
+    expect(rafu.cancel).to.exist;
+  });
+
   it('should have throttle method', function() {
     expect(rafu.throttle).to.exist;
   });
@@ -37,6 +41,32 @@ describe('rafu', function() {
       rafu.frame(function() {
         done();
       });
+    });
+
+    it('should return a numeric id > 0', function() {
+      var id = rafu.frame(function() {});
+      expect(id).to.be.greaterThan(0);
+    });
+  });
+
+  describe('cancel', function() {
+    it('should call the non-cancelled frame callback', function(done) {
+      var callback = sinon.spy();
+      var id = rafu.frame(callback);
+      setTimeout(function(){
+        expect(callback.callCount).to.equal(1);
+        done();
+      }, 100)
+    });
+
+    it('should not call the cancelled frame callback', function(done) {
+      var callback = sinon.spy();
+      var id = rafu.frame(callback);
+      rafu.cancel(id);
+      setTimeout(function(){
+        expect(callback.callCount).to.equal(0);
+        done();
+      }, 100);
     });
   });
 
@@ -71,8 +101,29 @@ describe('rafu', function() {
         done();
       });
     });
-  });
 
+    it('should have cancel method attached', function() {
+      var handler = rafu.throttle(function() {});
+      expect(typeof handler.cancel).to.equal('function');
+    });
+
+    it('should not run when cancel is called', function(done) {
+      var count = 0;
+      var handler = rafu.throttle(function() {
+        count++;
+      });
+  
+      handler();
+      handler();
+      handler();
+      handler.cancel();
+  
+      setTimeout(function(){
+        expect(count).to.equal(0);
+        done();
+      }, 100);
+    });
+  });
 });
 
 mocha.run();
