@@ -56,7 +56,7 @@ describe('rafu', function() {
       setTimeout(function(){
         expect(callback.callCount).to.equal(1);
         done();
-      }, 100)
+      }, 30);
     });
 
     it('should not call the cancelled frame callback', function(done) {
@@ -66,7 +66,7 @@ describe('rafu', function() {
       setTimeout(function(){
         expect(callback.callCount).to.equal(0);
         done();
-      }, 100);
+      }, 30);
     });
   });
 
@@ -112,16 +112,16 @@ describe('rafu', function() {
       var handler = rafu.throttle(function() {
         count++;
       });
-  
+
       handler();
       handler();
       handler();
       handler.cancel();
-  
+
       setTimeout(function(){
         expect(count).to.equal(0);
         done();
-      }, 100);
+      }, 30);
     });
   });
 });

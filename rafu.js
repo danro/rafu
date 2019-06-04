@@ -28,9 +28,9 @@ var cancelRaf = (function(win) {
 })(typeof window === 'undefined' ? {} : window);
 
 /**
- * rafu.frame - basic animation frame request method
+ * rafu.frame - animation frame request method
  * @param {Function} callback
- * @return {Number} requestAnimationFrame or setTimeout identifier: call rafu.cancel with this
+ * @return {Number} requestAnimationFrame or setTimeout identifier
  */
 var frame = exports.frame = (function(win) {
   // Check that both are supported, so that the identifier for `cancel` will be consistent
@@ -43,8 +43,8 @@ var frame = exports.frame = (function(win) {
 }(typeof window === 'undefined' ? {} : window));
 
 /**
- * rafu.cancel - cancels a frame via id returned by rafu.frame
- * @param {Number} requestAnimationFrame or setTimeout id for cancelling
+ * rafu.cancel - cancel frame request by id
+ * @param {Number} requestAnimationFrame or setTimeout identifier to cancel
  */
 var cancel = exports.cancel = (function(win) {
   if (raf && cancelRaf) {
@@ -58,28 +58,28 @@ var cancel = exports.cancel = (function(win) {
 /**
  * rafu.throttle - returns a function, that, when invoked, will only be triggered
  * once every browser animation frame
- * @param {Function} func  Funciton to wrap
- * @return {Function} throttled func with cancel property added
+ * @param {Function} func wrapped function to apply
+ * @return {Function} throttled function with cancel property added
  */
 exports.throttle = function(func) {
   var wait;
   var args;
   var context;
-  var rafOrTimeoutId;
+  var id;
 
   var throttled = function() {
     args = arguments;
     if (wait) return;
     wait = true;
     context = this;
-    rafOrTimeoutId = frame(function() {
+    id = frame(function() {
       wait = false;
       func.apply(context, args);
     });
   };
 
   throttled.cancel = function() {
-    cancel(rafOrTimeoutId);
+    cancel(id);
   };
 
   return throttled;
