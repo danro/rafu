@@ -5,18 +5,36 @@
  * @license MIT
  */
 
+var raf = (function(win) {
+  return (
+    win.requestAnimationFrame ||
+    win.webkitRequestAnimationFrame ||
+    win.mozRequestAnimationFrame ||
+    win.oRequestAnimationFrame ||
+    win.msRequestAnimationFrame ||
+    null
+  );
+})(typeof window === 'undefined' ? {} : window);
+
+var cancelRaf = (function(win) {
+  return (
+    win.cancelAnimationFrame ||
+    win.webkitCancelAnimationFrame ||
+    win.mozCancelAnimationFrame ||
+    win.oCancelAnimationFrame ||
+    win.msCancelAnimationFrame ||
+    null
+  );
+})(typeof window === 'undefined' ? {} : window);
+
 /**
  * rafu.frame - basic animation frame request method
  * @param {Function} callback
  * @return {Number} requestAnimationFrame or setTimeout id for cancelling
  */
 var frame = exports.frame = (function(win) {
-  var raf = win.requestAnimationFrame ||
-    win.webkitRequestAnimationFrame ||
-    win.mozRequestAnimationFrame ||
-    win.oRequestAnimationFrame ||
-    win.msRequestAnimationFrame;
-  if (raf) {
+  // Check that both are supported, so that the identifier for `cancel` will be consistent
+  if (raf && cancelRaf) {
     return raf.bind(win);
   }
   return function (callback) {
@@ -29,12 +47,7 @@ var frame = exports.frame = (function(win) {
  * @param {Number} requestAnimationFrame or setTimeout id for cancelling
  */
 var cancelFrame = exports.cancelFrame = (function(win) {
-  var cancelRaf = win.cancelAnimationFrame ||
-    win.webkitCancelAnimationFrame ||
-    win.mozCancelAnimationFrame ||
-    win.oCancelAnimationFrame ||
-    win.msCancelAnimationFrame;
-  if (cancelRaf) {
+  if (raf && cancelRaf) {
     return cancelRaf.bind(win);
   }
   return function (timeoutId) {
