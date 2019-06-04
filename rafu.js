@@ -43,10 +43,10 @@ var frame = exports.frame = (function(win) {
 }(typeof window === 'undefined' ? {} : window));
 
 /**
- * rafu.cancelFrame - cancels a frame via id returned by rafu.frame
+ * rafu.cancel - cancels a frame via id returned by rafu.frame
  * @param {Number} requestAnimationFrame or setTimeout id for cancelling
  */
-var cancelFrame = exports.cancelFrame = (function(win) {
+var cancel = exports.cancel = (function(win) {
   if (raf && cancelRaf) {
     return cancelRaf.bind(win);
   }
@@ -79,7 +79,7 @@ exports.throttle = function(func) {
   };
 
   throttled.cancel = function() {
-    cancelFrame(rafOrTimeoutId);
+    cancel(rafOrTimeoutId);
   };
 
   return throttled;

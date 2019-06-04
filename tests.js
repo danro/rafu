@@ -14,8 +14,8 @@ describe('rafu', function() {
     expect(rafu.frame).to.exist;
   });
 
-  it('should have cancelFrame method', function() {
-    expect(rafu.cancelFrame).to.exist;
+  it('should have cancel method', function() {
+    expect(rafu.cancel).to.exist;
   });
 
   it('should have throttle method', function() {
@@ -49,7 +49,7 @@ describe('rafu', function() {
     });
   });
 
-  describe('cancelFrame', function() {
+  describe('cancel', function() {
     it('should call the non-cancelled frame callback', function(done) {
       var callback = sinon.spy();
       var id = rafu.frame(callback);
@@ -62,7 +62,7 @@ describe('rafu', function() {
     it('should not call the cancelled frame callback', function(done) {
       var callback = sinon.spy();
       var id = rafu.frame(callback);
-      rafu.cancelFrame(id);
+      rafu.cancel(id);
       setTimeout(function(){
         expect(callback.callCount).to.equal(0);
         done();
