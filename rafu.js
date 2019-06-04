@@ -30,7 +30,7 @@ var cancelRaf = (function(win) {
 /**
  * rafu.frame - basic animation frame request method
  * @param {Function} callback
- * @return {Number} requestAnimationFrame or setTimeout id for cancelling
+ * @return {Number} requestAnimationFrame or setTimeout identifier: call rafu.cancel with this
  */
 var frame = exports.frame = (function(win) {
   // Check that both are supported, so that the identifier for `cancel` will be consistent
@@ -59,7 +59,7 @@ var cancel = exports.cancel = (function(win) {
  * rafu.throttle - returns a function, that, when invoked, will only be triggered
  * once every browser animation frame
  * @param {Function} func  Funciton to wrap
- * @return {Function} throttled func with cancel property added  
+ * @return {Function} throttled func with cancel property added
  */
 exports.throttle = function(func) {
   var wait;
