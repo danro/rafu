@@ -102,7 +102,7 @@ describe('rafu', function() {
       });
     });
 
-    it('should hanve cancel method attached', function() {
+    it('should have cancel method attached', function() {
       var handler = rafu.throttle(function() {});
       expect(typeof handler.cancel).to.equal('function');
     });
